@@ -37,13 +37,16 @@ class CompanyController extends Controller
      */
     public function store(CompanyRequest $request)
     {
+        $path = null;
         if($request->hasFile('logo')){
-            $path = Storage::putFile('public/logos', $request->file('logo'));
+            $image = $request->file('logo');
+            $imageName = $image->getClientOriginalName();
+            $request->file('logo')->storeAs('public/logos', $imageName);
         }
         Company::create([
             'name' => $request->name,
             'email' => $request->email,
-            'logo' => $path,
+            'logo' => isset($imageName) ? $imageName : null,
             'website' => $request->website
         ]);
         return redirect( route('companies.index') )->with('success', 'Empresa creada');

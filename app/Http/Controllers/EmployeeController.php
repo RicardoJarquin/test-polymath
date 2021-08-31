@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmployeeRequest;
 use App\Models\Company;
 use App\Models\Employee;
-use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
@@ -36,7 +36,7 @@ class EmployeeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EmployeeRequest $request)
     {
         Employee::create($request->except('_token'));
         return redirect( route('employees.index') );
@@ -72,7 +72,7 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(EmployeeRequest $request, Employee $employee)
     {
         $employee->update($request->except('_method', '_token'));
         return redirect( route('employees.index') );
@@ -86,6 +86,7 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        return view('employee.index');
+        $employee->delete();
+        return redirect( route('employees.index') );
     }
 }
